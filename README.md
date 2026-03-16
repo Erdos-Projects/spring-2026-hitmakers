@@ -169,27 +169,90 @@ All models substantially outperform the stratified baseline (~0.50 AUC). The pip
 ```
 ├── README.md                          # This file
 ├── DATA_PIPELINE.md                   # Detailed data pipeline documentation
-├── data_preparation.ipynb             # df_artists.csv → df_artists_final.csv
+├── data_preparation.ipynb             # Main data preparation notebook
 ├── Hitmakers_model_compare.ipynb      # Full 8-step model comparison pipeline
 ├── Hitmakers_temporal_split.ipynb     # Temporal train/test split variant
 │
 ├── df_artists_final.csv               # Model-ready dataset (759 × 27)
-├── df_artists.csv                     # Pre-filtered artist dataset (13,655 × 44)
-├── df_songs.csv                       # Song-level features (~30 K rows)
-├── df_albums.csv                      # Album-level data
-├── billboard_hot100_1958_2026.csv     # Raw Billboard Hot 100 weekly data
-├── billboard_hot100_songs_final.csv   # Deduplicated songs
-├── billboard_200_albums_final.csv     # Deduplicated albums
-│
-├── pipeline_supplement/               # Upstream pipeline notebooks (Stages 1–8)
-├── McNally_Jupyter_Notebooks/         # EDA, data cleaning, network analysis notebooks
-├── McNally_Network_Analysis_Data/     # Network graph data files
-├── GS/                                # Google Trends experiment notebooks
-├── Old_CSVs/                          # Archived intermediate CSVs
-├── UPDATE_YUNDI/                      # Supplementary update notebooks
-│
-├── ml_sandbox_*.ipynb                 # Iterative modelling experiments
-├── Model_Comparison.ipynb             # Finalized model comparison draft
+├── catboost_info/                     # CatBoost training outputs and logs
+│   ├── catboost_training.json
+│   ├── learn_error.tsv
+│   ├── time_left.tsv
+│   ├── learn/
+│   └── tmp/
+├── Datasets/
+│   ├── billboard_200_albums_final.csv
+│   ├── Main_Data/
+│   │   ├── billboard_hot100_1958_2026.csv
+│   │   ├── billboard_hot100_songs_final.csv
+│   │   ├── df_albums.csv
+│   │   ├── df_artists.csv
+│   │   ├── df_artists_network_metrics.csv
+│   │   ├── df_artists_with_network_metrics.csv
+│   │   └── df_songs.csv
+│   └── Pipeline_supplement/
+│       ├── billboard_data_cleaning_pt_1_McNally.ipynb
+│       ├── billboard_data_cleaning_pt_2_McNally.ipynb
+│       ├── billboard_data_cleaning_pt_4.ipynb
+│       ├── billboard_data_cleaning_pt_5_genre.ipynb
+│       ├── billboard_data_cleaning_pt_6_condensing.ipynb
+│       ├── billboard_data_cleaning_pt_7_filling_in_missing_artist_ids.ipynb
+│       ├── billboard_data_cleaning_pt_8_new_network_metrics.ipynb
+│       ├── billboard_network_data_merge.ipynb
+│       ├── df_artists_clean.ipynb
+│       ├── df_songs_create.ipynb
+│       ├── EDA_1_+billboard_data_cleaning_pt_3.ipynb
+│       ├── google_trends_engineered.ipynb
+│       └── Googletrend_dataset.ipynb
+├── ml_sandbox/
+│   ├── ml_sandbox_13_model_compare.ipynb
+│   ├── ml_sandbox_14_first_charting_song.ipynb
+│   ├── ml_sandbox_15_df_artists_final_clean.ipynb
+│   ├── ml_sandbox_16_final_xgboost_tuning.ipynb
+│   ├── ml_sandbox_17_model_compare_final_xgboost_tuning.ipynb
+│   ├── ml_sandbox_18_catboost.ipynb
+│   ├── ml_sandbox_18_model_compare_final_xgboost_tuning_with_threshold_tuning.ipynb
+│   ├── ml_sandbox_19_adaboost_linear.ipynb
+│   ├── ml_sandbox_20_adaboost_tree.ipynb
+│   ├── ml_sandbox_21_pipeline_compare.ipynb
+│   ├── ml_sandbox_22_explainability.ipynb
+│   ├── ml_sandbox_23_model_selection.ipynb
+│   ├── ml_sandbox_24_executive_summary.ipynb
+│   └── ml_sandbox_25_google_trends_comparison.ipynb
+├── Preliminary Study/
+│   ├── GS/
+│   │   ├── df_songs_google_decay.csv
+│   │   ├── extra_model_compare.ipynb
+│   │   ├── google_trends_engineered.ipynb
+│   │   ├── Googletrend_dataset.ipynb
+│   │   ├── more_boost.ipynb
+│   │   └── catboost_info/
+│   ├── McNally_Jupyter_Notebooks/
+│   │   ├── billboard_data_cleaning_pt_1_McNally.ipynb
+│   │   ├── billboard_data_cleaning_pt_2_McNally.ipynb
+│   │   ├── ...
+│   ├── McNally_Network_Analysis_Data/
+│   │   ├── master_edge_list_all_artists.parquet
+│   │   ├── master_edge_list_top_10_artists_only.parquet
+│   │   ├── networks_all_artists/
+│   │   └── networks_top_10_artists_only/
+│   ├── Old_CSVs/
+│   │   ├── billboard_24years_lyrics_spotify.csv
+│   │   ├── df_albums_old.csv
+│   │   ├── ...
+│   └── UPDATE_YUNDI/
+│       ├── Build_Comprehensive_Dataset.ipynb
+│       ├── COMPREHENSIVE_DATASET_README.md
+│       ├── DATA_PIPELINE_DIAGRAMS.md
+│       ├── EDA_comp.ipynb
+│       ├── Modeling_Preliminary.ipynb
+│       ├── MusicBrainz_Data Understanding.ipynb
+│       ├── MusicBrainz_DataExtract.ipynb
+│       ├── artist_child_csv/
+│       ├── df_comprehensive_hitmaker_prediction.csv
+│       ├── df_comprehensive_hitmaker_prediction_DICTIONARY.csv
+│       ├── ml_sandbox_0306.ipynb
+│       └── ml_sandbox_update.ipynb
 ```
 
 ---
