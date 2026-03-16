@@ -1,4 +1,4 @@
-# Hitmakers — Predicting Billboard Success
+# Hitmakers (FEEL FREE TO MAKE CHANGE! PUTTING THE FORMAT HERE FOR NOW!)
 
 > **Can we predict whether a newly charting artist will become a hitmaker or a one-hit wonder?**
 
