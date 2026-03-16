@@ -9,7 +9,7 @@ This project builds a machine-learning pipeline that predicts whether an artist 
 | **Dataset** | 759 artists × 26 features (2000–2019 debut window) |
 | **Target** | `top_20_hitmaker` — binary (1 = multiple top-20 hits, 0 = exactly one) |
 | **Class balance** | ~57 % one-hit wonders · ~43 % hitmakers |
-| **Best model** | XGBoost (Test AUC ≈ 0.78, tuned with Optuna + forward selection) |
+| **Best model(Edit later)** | XGBoost (Test AUC ≈ 0.78, tuned with Optuna + forward selection) |
 
 ---
 
