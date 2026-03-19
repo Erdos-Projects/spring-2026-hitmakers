@@ -34,7 +34,7 @@ This project builds a machine-learning pipeline that predicts whether an artist 
 
 Artists break onto the Billboard Hot 100 every year, but only a fraction sustain chart success. This project combines Billboard chart history (1958–2026), MusicBrainz metadata, collaboration-network analysis, and genre tagging to predict — at the moment of an artist's first top-20 hit — whether they will chart again.
 
-The modelling pipeline is fully automated: hyperparameter tuning (Optuna), feature selection (forward selection + SHAP), genre consolidation, centrality ablation, and leakage-safe threshold tuning all run end-to-end in a single notebook.
+The modelling pipeline combines hyperparameter tuning (Optuna), feature selection (forward selection + SHAP), genre consolidation, centrality ablation, and leakage-safe threshold tuning. A lighter version of this pipeline is used for the final model, prioritising stability and interpretability over exhaustive search.
 
 ---
 
@@ -54,7 +54,7 @@ The modelling pipeline is fully automated: hyperparameter tuning (Optuna), featu
 
 ## Data Pipeline
 
-The raw data goes through **8 feature-engineering stages** before reaching the model-ready dataset. Full details are in `data_preparation.ipynb` and the notebooks under `pipeline_supplement/`.
+The raw data goes through **8 feature-engineering stages** before reaching the model-ready dataset. Full details are in `data_preparation.ipynb` and the notebooks under `Pipeline_supplement/`.
 
 ```
 External Sources → Stage 1–8 → df_artists.csv (13,655 artists × 44 cols)
@@ -157,7 +157,7 @@ The model comparison notebook (`Model_Comparison_Final.ipynb`) runs an **8-step 
 
 With only 759 artists (607 in training) and 5-fold CV (~121 artists per fold), cross-validation AUC estimates are noisy. Optuna can exploit this noise, producing hyperparameters that look good on CV but don't generalise — a form of hyperparameter overfitting.
 
-To check this, we ran a **bootstrap validation** (`Bootstrap_validation.ipynb`, B=25): resample the training set with replacement, run the full tuning pipeline each iteration, evaluate on the fixed test set.
+To check this, we ran a **bootstrap validation** (`Bootstrap_validation.ipynb`, B=25): resample the training set with replacement, run a simplified tuning pipeline (10 Optuna trials) each iteration, evaluate on the fixed test set.
 
 ![Bootstrap Validation](Complementary%20Study/Bootstrap_validation.png)
 
@@ -286,7 +286,7 @@ seaborn
 
 2. **Install dependencies**
    ```bash
-   pip install pandas numpy scikit-learn xgboost catboost optuna shap matplotlib seaborn
+   pip install pandas numpy scikit-learn xgboost lightgbm catboost optuna shap matplotlib seaborn
    ```
 
 3. **Run data preparation** (optional — `df_artists_final.csv` is already provided)
