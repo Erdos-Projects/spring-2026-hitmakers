@@ -24,9 +24,8 @@ This project builds a machine-learning pipeline that predicts whether an artist 
 7. [Model Selection & Stability](#model-selection--stability)
 8. [Robustness Check: Naked Models](#robustness-check-naked-models)
 9. [Final Model: Random Forest](#final-model-random-forest)
-10. [Key Results](#key-results)
-11. [Repository Structure](#repository-structure)
-12. [Getting Started](#getting-started)
+10. [Repository Structure](#repository-structure)
+11. [Getting Started](#getting-started)
 
 ---
 
@@ -209,23 +208,16 @@ The naked bootstrap established that recall is too variable without any tuning. 
 | Threshold | 0.50 |
 | Total leaves | 717 (avg 4.0 per tree) |
 
-The conservative depth (max_depth=2) directly addresses recall instability: the fixed-param bootstrap of this model yields recall std=0.032 — less than half the naked RF's 0.071 — confirming that light tuning is enough to stabilize the metric that matters most.
+**Bootstrap stability** (`Final_Model_RandomForest.ipynb`, B=100, full pipeline):
 
----
+| Metric | Single run | Mean | Std | 95% CI |
+|--------|:----------:|:----:|:---:|--------|
+| AUC | 0.773 | 0.767 | 0.014 | [0.739, 0.791] |
+| Precision | 0.627 | 0.584 | 0.054 | [0.494, 0.690] |
+| Recall | 0.712 | 0.762 | 0.067 | [0.636, 0.909] |
+| F1 | 0.667 | 0.656 | 0.020 | [0.618, 0.693] |
 
-## Key Results
-
-All models substantially outperform the stratified baseline (~0.50 AUC). The pipeline produces per-model diagnostics including ROC curves, confusion matrices, calibration curves, precision-recall curves, cumulative gain (lift) charts, and both unsigned and signed SHAP heatmaps.
-
-### Evaluation Metrics
-
-| Metric | Description |
-|--------|-------------|
-| **AUC-ROC** | Primary ranking metric (discrimination ability) |
-| **Log Loss** | Penalises confident wrong predictions |
-| **Brier Score** | Calibration — closeness of predicted probabilities to true outcomes |
-| **Precision / Recall / F1** | Classification performance at tuned threshold |
-| **Lift** | Cumulative gain at 10 %, 20 %, 30 %, 50 % of artists screened |
+Each bootstrap iteration re-runs the full pipeline — feature selection, 8 Optuna trials, and threshold tuning — making this the most honest stability check. All single-run metrics fall within their bootstrap confidence intervals, confirming the result is reproducible and not a lucky draw. Recall carries the most variance (std=0.067), reflecting the fundamental limit of a dataset of this size rather than a flaw in the model.
 
 ---
 
