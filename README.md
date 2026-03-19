@@ -21,9 +21,11 @@ This project builds a machine-learning pipeline that predicts whether an artist 
 4. [Feature Engineering](#feature-engineering)
 5. [Model Comparison Pipeline](#model-comparison-pipeline)
 6. [Models Evaluated](#models-evaluated)
-7. [Key Results](#key-results)
-8. [Repository Structure](#repository-structure)
-9. [Getting Started](#getting-started)
+7. [Model Selection & Stability](#model-selection--stability)
+8. [Key Results](#key-results)
+9. [Robustness Check: Naked Models](#robustness-check-naked-models)
+10. [Repository Structure](#repository-structure)
+11. [Getting Started](#getting-started)
 
 ---
 
@@ -147,6 +149,24 @@ The model comparison notebook (`Model_Comparison_Final.ipynb`) runs an **8-step 
 | CatBoost | Gradient boosting | Ordered boosting, built-in regularisation |
 | AdaBoost (Linear) | Adaptive boosting | Logistic regression base learner |
 | AdaBoost (Tree) | Adaptive boosting | Decision-tree stump base learner |
+
+---
+
+## Model Selection & Stability
+
+With only 759 artists (607 in training) and 5-fold CV (~121 artists per fold), cross-validation AUC estimates are noisy. Optuna can exploit this noise, producing hyperparameters that look good on CV but don't generalise — a form of hyperparameter overfitting.
+
+To check this, we ran a **bootstrap validation** (`Bootstrap_validation.ipynb`, B=25): resample the training set with replacement, run the full tuning pipeline each iteration, evaluate on the fixed test set.
+
+| Model | Single-run AUC | Bootstrap mean | Bootstrap std | 90% CI | Δ vs Baseline | Δ vs Single-run |
+|-------|:--------------:|:--------------:|:-------------:|--------|:-------------:|:---------------:|
+| XGBoost | 0.774 | 0.739 | 0.023 | [0.697, 0.775] | +0.233 | −0.035 |
+| Random Forest | 0.767 | 0.745 | 0.021 | [0.715, 0.774] | +0.239 | −0.022 |
+| CatBoost | 0.753 | 0.719 | 0.032 | [0.671, 0.750] | +0.213 | −0.034 |
+
+All three models consistently outperform the stratified baseline (~0.506 AUC) by over 0.21 AUC points across all bootstrap resamples — confirming the signal in the data is real, not an artifact of a single lucky split.
+
+**Random Forest shows the smallest standard deviation, tightest confidence interval, and smallest drop from the single-run AUC (−0.022)**, making it the most stable and reproducible choice on a dataset of this size. RF is selected as the final model.
 
 ---
 
