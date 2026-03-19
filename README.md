@@ -140,11 +140,13 @@ The model comparison notebook (`Hitmakers_model_compare.ipynb`) runs an **8-step
 | Model | Type | Key Properties |
 |-------|------|----------------|
 | Stratified Baseline | Baseline | Predicts class ratio (~43 % hitmaker) |
-| Logistic Regression | Linear | L2-regularised, `StandardScaler` applied |
+| Logistic Regression | Linear | L2-regularised, `StandardScaler` applied — preliminary study only |
 | Random Forest | Ensemble (bagging) | `class_weight='balanced'` for imbalance |
 | XGBoost | Gradient boosting | L1/L2 regularisation, column sampling |
+| LightGBM | Gradient boosting | Histogram-based, leaf-wise growth |
 | CatBoost | Gradient boosting | Ordered boosting, built-in regularisation |
-| AdaBoost | Adaptive boosting | Decision-tree stumps (Freund & Schapire 1997) |
+| AdaBoost (Linear) | Adaptive boosting | Logistic regression base learner |
+| AdaBoost (Tree) | Adaptive boosting | Decision-tree stump base learner |
 
 ---
 
