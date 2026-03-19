@@ -22,11 +22,11 @@ This project builds a machine-learning pipeline that predicts whether an artist 
 5. [Model Comparison Pipeline](#model-comparison-pipeline)
 6. [Models Evaluated](#models-evaluated)
 7. [Model Selection & Stability](#model-selection--stability)
-8. [Key Results](#key-results)
 8. [Robustness Check: Naked Models](#robustness-check-naked-models)
-9. [Key Results](#key-results)
-10. [Repository Structure](#repository-structure)
-11. [Getting Started](#getting-started)
+9. [Final Model: Random Forest](#final-model-random-forest)
+10. [Key Results](#key-results)
+11. [Repository Structure](#repository-structure)
+12. [Getting Started](#getting-started)
 
 ---
 
@@ -189,6 +189,27 @@ To test whether performance depends on tuning or on the signal in the data, we r
 The tuned single-run AUC (0.767) sits well within the naked bootstrap distribution — the two are statistically indistinguishable. **The signal in the data is the main driver of performance, not the tuning.**
 
 However, recall tells a different story. With a std of 0.071 and a 90% CI spanning 0.21, a naked RF can produce recall anywhere from 0.64 to 0.85 depending on the training sample. For a model intended to reliably identify hitmakers, this level of variability is unacceptable.
+
+---
+
+## Final Model: Random Forest
+
+The naked bootstrap established that recall is too variable without any tuning. Rather than running the full heavy pipeline, `Final_Model_RandomForest.ipynb` uses a deliberately **light and conservative** tuning approach: 8 Optuna trials (vs 30+ elsewhere), a stronger gap penalty (λ=0.5 vs 0.3), tighter regularization bounds, SHAP-based genre consolidation, top 12 features by importance, centrality ablation, and a precision floor of 0.60 on threshold tuning.
+
+**Best parameters found:** `n_estimators=181`, `max_depth=2`, `min_samples_leaf=14`, `max_features=log2` — shallow trees, strongly regularized.
+
+| Metric | Value |
+|--------|-------|
+| Test AUC | 0.773 |
+| Train–Test Gap | 0.008 |
+| Log Loss | 0.597 |
+| Precision | 0.627 |
+| Recall | 0.712 |
+| F1 | 0.667 |
+| Threshold | 0.50 |
+| Total leaves | 717 (avg 4.0 per tree) |
+
+The conservative depth (max_depth=2) directly addresses recall instability: the fixed-param bootstrap of this model yields recall std=0.032 — less than half the naked RF's 0.071 — confirming that light tuning is enough to stabilize the metric that matters most.
 
 ---
 
