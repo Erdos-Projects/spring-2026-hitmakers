@@ -23,7 +23,8 @@ This project builds a machine-learning pipeline that predicts whether an artist 
 6. [Models Evaluated](#models-evaluated)
 7. [Model Selection & Stability](#model-selection--stability)
 8. [Key Results](#key-results)
-9. [Robustness Check: Naked Models](#robustness-check-naked-models)
+8. [Robustness Check: Naked Models](#robustness-check-naked-models)
+9. [Key Results](#key-results)
 10. [Repository Structure](#repository-structure)
 11. [Getting Started](#getting-started)
 
@@ -169,6 +170,25 @@ To check this, we ran a **bootstrap validation** (`Bootstrap_validation.ipynb`, 
 All three models consistently outperform the stratified baseline (~0.506 AUC) by over 0.21 AUC points across all bootstrap resamples — confirming the signal in the data is real, not an artifact of a single lucky split.
 
 **Random Forest shows the smallest standard deviation, tightest confidence interval, and smallest drop from the single-run AUC (−0.022)**, making it the most stable and reproducible choice on a dataset of this size. RF is selected as the final model.
+
+---
+
+## Robustness Check: Naked Models
+
+To test whether performance depends on tuning or on the signal in the data, we ran a bootstrap (`Naked_Model_Bootstrap_Threshold.ipynb`, B=100) using Random Forest with fixed, untuned hyperparameters — no Optuna, no feature selection, all 26 features.
+
+![Naked RF Bootstrap](Complementary%20Study/Naked_RF_Bootstrap.png)
+
+| Metric | Tuned RF (single run) | Naked RF mean | Naked RF std | 90% CI |
+|--------|:---------------------:|:-------------:|:------------:|--------|
+| AUC | 0.767 | 0.760 | 0.012 | [0.738, 0.779] |
+| Precision | 0.617 | 0.580 | 0.044 | [0.523, 0.672] |
+| Recall | 0.758 | 0.749 | 0.071 | [0.636, 0.848] |
+| F1 | 0.680 | 0.650 | 0.020 | [0.620, 0.681] |
+
+The tuned single-run AUC (0.767) sits well within the naked bootstrap distribution — the two are statistically indistinguishable. **The signal in the data is the main driver of performance, not the tuning.**
+
+However, recall tells a different story. With a std of 0.071 and a 90% CI spanning 0.21, a naked RF can produce recall anywhere from 0.64 to 0.85 depending on the training sample. For a model intended to reliably identify hitmakers, this level of variability is unacceptable.
 
 ---
 
