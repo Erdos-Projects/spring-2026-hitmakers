@@ -223,99 +223,36 @@ To validate the final model, we re-ran the complete pipeline — feature selecti
 
 All single-run metrics fall within their bootstrap confidence intervals, confirming the result is reproducible and not a lucky draw. Recall carries the most variance (std=0.067), which is expected on a dataset of this size — but it does not undermine the model.
 
-Two things support this. First, the pipeline consistently selects 10 features across all 100 bootstrap iterations, converging every time on the same three drivers: **charting history, network position, and genre**. That consistency is itself a finding — the model is not fishing for features, it is rediscovering the same signal. Second, the precision advantage over a fully naked model (0.627 vs 0.580) is a direct result of those deliberate feature choices, not tuning luck. The pipeline's contribution is not that it squeezes extra AUC — it is that it builds a model you can explain and defend.
+Two things support this. First, the pipeline consistently selects 10 features across all 100 bootstrap iterations, converging every time on the same three drivers: **charting history, network position, and genre**. That consistency is itself a finding — the model is not fishing for features, it is rediscovering the same signal. Second, the precision advantage over a fully naked model (0.627 vs 0.580) is a direct result of those deliberate feature choices, not tuning luck. The pipeline's contribution is not that it squeezes extra AUC — it is that it builds a model we can explain and defend.
 
 ---
 
 ## Repository Structure
 
 ```
-├── README.md                          # This file
-├── DATA_PIPELINE.md                   # Detailed data pipeline documentation
-├── data_preparation.ipynb             # Main data preparation notebook
-├── Hitmakers_model_compare.ipynb      # Full 8-step model comparison pipeline
-├── Hitmakers_temporal_split.ipynb     # Temporal train/test split variant
-│
+├── README.md
 ├── df_artists_final.csv               # Model-ready dataset (759 × 27)
-├── catboost_info/                     # CatBoost training outputs and logs
-│   ├── catboost_training.json
-│   ├── learn_error.tsv
-│   ├── time_left.tsv
-│   ├── learn/
-│   └── tmp/
+├── data_preparation.ipynb             # df_artists → df_artists_final
+├── EDA_on_df_artists_final.ipynb      # Exploratory analysis
+├── Model_Comparison_Final.ipynb       # 8-step pipeline, 6 models
+├── Bootstrap_validation.ipynb         # Bootstrap validation of Model_Comparison_Final models (B=25)
+├── bootstrap_results.pkl
+├── Final_Model_RandomForest.ipynb     # Final model + full pipeline bootstrap (B=100)
+│
+├── Complementary Study/               # Additional analyses
+│   ├── Final_Model_RandomForest_Complement.ipynb  # SHAP + extra plots for final model
+│   ├── Model_Comparison_Final_SHAP.ipynb          # SHAP waterfall for all 6 models
+│   ├── best3-disagreement.ipynb                   # Disagreement analysis, top 3 models
+│   ├── Naked_Model_Bootstrap_Threshold.ipynb      # Naked RF bootstrap (B=100)
+│   ├── RF_light_grid.ipynb                        # Light RF with ad-hoc genre consolidation
+│   ├── RF_light_grid_bootstrap.ipynb              # Bootstrap validation of Light RF (B=25)
+│   └── google_trends_signal_check.ipynb           # Google Trends ablation
+│
 ├── Datasets/
-│   ├── billboard_200_albums_final.csv
-│   ├── Main_Data/
-│   │   ├── billboard_hot100_1958_2026.csv
-│   │   ├── billboard_hot100_songs_final.csv
-│   │   ├── df_albums.csv
-│   │   ├── df_artists.csv
-│   │   ├── df_artists_network_metrics.csv
-│   │   ├── df_artists_with_network_metrics.csv
-│   │   └── df_songs.csv
-│   └── Pipeline_supplement/
-│       ├── billboard_data_cleaning_pt_1_McNally.ipynb
-│       ├── billboard_data_cleaning_pt_2_McNally.ipynb
-│       ├── billboard_data_cleaning_pt_4.ipynb
-│       ├── billboard_data_cleaning_pt_5_genre.ipynb
-│       ├── billboard_data_cleaning_pt_6_condensing.ipynb
-│       ├── billboard_data_cleaning_pt_7_filling_in_missing_artist_ids.ipynb
-│       ├── billboard_data_cleaning_pt_8_new_network_metrics.ipynb
-│       ├── billboard_network_data_merge.ipynb
-│       ├── df_artists_clean.ipynb
-│       ├── df_songs_create.ipynb
-│       ├── EDA_1_+billboard_data_cleaning_pt_3.ipynb
-│       ├── google_trends_engineered.ipynb
-│       └── Googletrend_dataset.ipynb
-├── ml_sandbox/
-│   ├── ml_sandbox_13_model_compare.ipynb
-│   ├── ml_sandbox_14_first_charting_song.ipynb
-│   ├── ml_sandbox_15_df_artists_final_clean.ipynb
-│   ├── ml_sandbox_16_final_xgboost_tuning.ipynb
-│   ├── ml_sandbox_17_model_compare_final_xgboost_tuning.ipynb
-│   ├── ml_sandbox_18_catboost.ipynb
-│   ├── ml_sandbox_18_model_compare_final_xgboost_tuning_with_threshold_tuning.ipynb
-│   ├── ml_sandbox_19_adaboost_linear.ipynb
-│   ├── ml_sandbox_20_adaboost_tree.ipynb
-│   ├── ml_sandbox_21_pipeline_compare.ipynb
-│   ├── ml_sandbox_22_explainability.ipynb
-│   ├── ml_sandbox_23_model_selection.ipynb
-│   ├── ml_sandbox_24_executive_summary.ipynb
-│   └── ml_sandbox_25_google_trends_comparison.ipynb
-├── Preliminary Study/
-│   ├── GS/
-│   │   ├── df_songs_google_decay.csv
-│   │   ├── extra_model_compare.ipynb
-│   │   ├── google_trends_engineered.ipynb
-│   │   ├── Googletrend_dataset.ipynb
-│   │   ├── more_boost.ipynb
-│   │   └── catboost_info/
-│   ├── McNally_Jupyter_Notebooks/
-│   │   ├── billboard_data_cleaning_pt_1_McNally.ipynb
-│   │   ├── billboard_data_cleaning_pt_2_McNally.ipynb
-│   │   ├── ...
-│   ├── McNally_Network_Analysis_Data/
-│   │   ├── master_edge_list_all_artists.parquet
-│   │   ├── master_edge_list_top_10_artists_only.parquet
-│   │   ├── networks_all_artists/
-│   │   └── networks_top_10_artists_only/
-│   ├── Old_CSVs/
-│   │   ├── billboard_24years_lyrics_spotify.csv
-│   │   ├── df_albums_old.csv
-│   │   ├── ...
-│   └── UPDATE_YUNDI/
-│       ├── Build_Comprehensive_Dataset.ipynb
-│       ├── COMPREHENSIVE_DATASET_README.md
-│       ├── DATA_PIPELINE_DIAGRAMS.md
-│       ├── EDA_comp.ipynb
-│       ├── Modeling_Preliminary.ipynb
-│       ├── MusicBrainz_Data Understanding.ipynb
-│       ├── MusicBrainz_DataExtract.ipynb
-│       ├── artist_child_csv/
-│       ├── df_comprehensive_hitmaker_prediction.csv
-│       ├── df_comprehensive_hitmaker_prediction_DICTIONARY.csv
-│       ├── ml_sandbox_0306.ipynb
-│       └── ml_sandbox_update.ipynb
+│   ├── Main_Data/                     # Raw and intermediate CSVs
+│   └── Pipeline_supplement/           # Data cleaning notebooks (stages 1–8)
+│
+└── Preliminary Study/                 # Early exploration (reference only)
 ```
 
 ---
@@ -357,7 +294,7 @@ seaborn
 
 4. **Run the model comparison pipeline**
    ```
-   Open Hitmakers_model_compare.ipynb and run all cells
+   Open Model_Comparison_Final.ipynb and run all cells
    ```
    This will execute the full 8-step pipeline for all 6 models, produce diagnostic plots, and output the cross-model comparison table.
 
