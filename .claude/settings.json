@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(ls -lh /Users/gui/Documents/GitHub/spring-2026-hitmakers/GS/df_songs_google*.csv /Users/gui/Documents/GitHub/spring-2026-hitmakers/GS/*google*.csv)",
-      "Bash(xargs cat:*)",
-      "Bash(/usr/bin/python3 -c \":*)"
-    ]
-  }
-}
