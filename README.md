@@ -221,7 +221,9 @@ To validate the final model, we re-ran the complete pipeline — feature selecti
 | Recall | 0.712 | 0.762 | 0.067 | [0.636, 0.909] |
 | F1 | 0.667 | 0.656 | 0.020 | [0.618, 0.693] |
 
-All single-run metrics fall within their bootstrap confidence intervals, confirming the result is reproducible and not a lucky draw. Recall carries the most variance (std=0.067), reflecting the fundamental limit of a dataset of this size rather than a flaw in the model.
+All single-run metrics fall within their bootstrap confidence intervals, confirming the result is reproducible and not a lucky draw. Recall carries the most variance (std=0.067), which is expected on a dataset of this size — but it does not undermine the model.
+
+Two things support this. First, the pipeline consistently selects 10 features across all 100 bootstrap iterations, converging every time on the same three drivers: **charting history, network position, and genre**. That consistency is itself a finding — the model is not fishing for features, it is rediscovering the same signal. Second, the precision advantage over a fully naked model (0.627 vs 0.580) is a direct result of those deliberate feature choices, not tuning luck. The pipeline's contribution is not that it squeezes extra AUC — it is that it builds a model you can explain and defend.
 
 ---
 
