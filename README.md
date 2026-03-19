@@ -158,6 +158,8 @@ With only 759 artists (607 in training) and 5-fold CV (~121 artists per fold), c
 
 To check this, we ran a **bootstrap validation** (`Bootstrap_validation.ipynb`, B=25): resample the training set with replacement, run the full tuning pipeline each iteration, evaluate on the fixed test set.
 
+![Bootstrap Validation](Complementary%20Study/Bootstrap_validation.png)
+
 | Model | Single-run AUC | Bootstrap mean | Bootstrap std | 90% CI | Δ vs Baseline | Δ vs Single-run |
 |-------|:--------------:|:--------------:|:-------------:|--------|:-------------:|:---------------:|
 | XGBoost | 0.774 | 0.739 | 0.023 | [0.697, 0.775] | +0.233 | −0.035 |
