@@ -208,7 +208,11 @@ The naked bootstrap established that recall is too variable without any tuning. 
 | Threshold | 0.50 |
 | Total leaves | 717 (avg 4.0 per tree) |
 
-**Bootstrap stability** (`Final_Model_RandomForest.ipynb`, B=100, full pipeline):
+### Bootstrap Stability
+
+To validate the final model, we re-ran the complete pipeline — feature selection, 8 Optuna trials, and threshold tuning — on 100 bootstrap resamples of the training set, evaluating each on the fixed test set. This is the most honest stability check: it captures not just sampling variability but also tuning variability.
+
+![Final RF Bootstrap](Complementary%20Study/Final_RF_Bootstrap.png)
 
 | Metric | Single run | Mean | Std | 95% CI |
 |--------|:----------:|:----:|:---:|--------|
@@ -217,7 +221,7 @@ The naked bootstrap established that recall is too variable without any tuning. 
 | Recall | 0.712 | 0.762 | 0.067 | [0.636, 0.909] |
 | F1 | 0.667 | 0.656 | 0.020 | [0.618, 0.693] |
 
-Each bootstrap iteration re-runs the full pipeline — feature selection, 8 Optuna trials, and threshold tuning — making this the most honest stability check. All single-run metrics fall within their bootstrap confidence intervals, confirming the result is reproducible and not a lucky draw. Recall carries the most variance (std=0.067), reflecting the fundamental limit of a dataset of this size rather than a flaw in the model.
+All single-run metrics fall within their bootstrap confidence intervals, confirming the result is reproducible and not a lucky draw. Recall carries the most variance (std=0.067), reflecting the fundamental limit of a dataset of this size rather than a flaw in the model.
 
 ---
 
