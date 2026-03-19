@@ -114,7 +114,7 @@ External Sources → Stage 1–8 → df_artists.csv (13,655 artists × 44 cols)
 
 ## Model Comparison Pipeline
 
-The model comparison notebook (`Hitmakers_model_compare.ipynb`) runs an **8-step automated pipeline** per model:
+The model comparison notebook (`Model_Comparison_Final.ipynb`) runs an **8-step automated pipeline** per model:
 
 | Step | Name | Purpose |
 |:----:|------|---------|
@@ -123,7 +123,7 @@ The model comparison notebook (`Hitmakers_model_compare.ipynb`) runs an **8-step
 | 3 | **Genre Consolidation** | Keep high-signal genres (importance > mean for SHAP models, > 0 for permutation); merge remainder → `artist_genre_other` |
 | 4 | **Forward Selection** | Greedy feature addition ordered by Step 2 importance; track CV AUC and overfit gap at each $n$ |
 | 5 | **Optuna Re-Tune + Winner** | Re-tune on $n_{\text{peak}}$ and $n_{\text{gap}}$ candidates; select winner by penalised score (min 5 features) |
-| 6 | **Centrality Ablation** | Test all $2^k$ subsets of centrality features; drop any subset that improves raw CV AUC |
+| 6 | **Centrality Ablation** | Test all $2^3 = 8$ subsets of the 3 centrality features; keep the subset that maximises the penalised score ($\text{CV AUC} - \lambda \times \text{gap}$) |
 | 7 | **Final Evaluation** | Fit on full training set; evaluate on held-out test set (single touch) |
 | 8 | **OOF Threshold Tuning** | Leakage-safe threshold from out-of-fold training predictions; precision ≥ 0.60 fallback |
 
