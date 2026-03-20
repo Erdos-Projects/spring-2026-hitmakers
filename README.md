@@ -3,6 +3,8 @@
 
 **Authors:** [Vishal Gupta](https://github.com/vishalguptaud) · [Yundi Kong](https://github.com/Ykong21) · [James McNally](https://github.com/jamesemcnally) · [Guillermo Sanmarco](https://github.com/sanmarcog)
 
+📄 [Executive Summary](Hitmakers%20Executive%20Summary.pdf)
+
 > **Can we predict whether a newly charting artist will become a hitmaker or a one-hit wonder?**
 
 This project builds a machine-learning pipeline that predicts whether an artist who scores their first Billboard Hot 100 top-20 hit will go on to chart again (`top_20_hitmaker = 1`) or remain a one-hit wonder (`top_20_hitmaker = 0`).
