@@ -5,9 +5,9 @@
 
 📄 [Executive Summary](Hitmakers%20Executive%20Summary.pdf)
 
-> **Can we predict whether a newly charting artist will become a hitmaker or a one-hit wonder?**
+> **Is it possible to predict whether a newly charting musician will become a hitmaker or a one-hit wonder?**
 
-This project builds a machine-learning pipeline that predicts whether an artist who scores their first Billboard Hot 100 top-20 hit will go on to chart again (`top_20_hitmaker = 1`) or remain a one-hit wonder (`top_20_hitmaker = 0`).
+This project builds a machine-learning pipeline that predicts whether an artist who scores their first Billboard Hot 100 top-20 hit will produce more top 20 hits in the future (`top_20_hitmaker = 1`) or remain a one-hit wonder (`top_20_hitmaker = 0`).
 
 | | |
 |---|---|
@@ -36,7 +36,7 @@ This project builds a machine-learning pipeline that predicts whether an artist 
 
 ## Project Overview
 
-Artists break onto the Billboard Hot 100 every year, but only a fraction sustain chart success. This project combines Billboard chart history (1958–2026), MusicBrainz metadata, collaboration-network analysis, and genre tagging to predict — at the moment of an artist's first top-20 hit — whether they will chart again.
+Artists break onto the Billboard Hot 100 every year, but only a fraction sustain chart success. This project combines Billboard chart history (1958–2026), MusicBrainz metadata, collaboration-network analysis, and genre tagging to predict — at the moment of an artist's first top-20 hit — whether they will produce additional hit songs in the future.
 
 <!-- The modelling pipeline combines hyperparameter tuning (Optuna), feature selection (forward selection + SHAP), genre consolidation, centrality ablation, and leakage-safe threshold tuning. A lighter version of this pipeline is used for the final model, prioritising stability and interpretability over exhaustive search. -->
 
@@ -106,9 +106,9 @@ The raw data goes through **8 feature-engineering stages** before reaching the m
 
 | Metric | Meaning |
 |--------|---------|
-| `harmonic_closeness_centrality` | Average distance to all other artists (handles disconnected components) |
+| `harmonic_closeness_centrality` | Average inverse distance to all other artists (handles disconnected components) |
 | `betweenness_centrality` | How often an artist is a "bridge" between communities |
-| `eigenvector_centrality` | Connected to other well-connected artists |
+| `eigenvector_centrality` | How connected an artist is to other well-connected artists |
 
 ---
 
