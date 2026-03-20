@@ -194,7 +194,7 @@ However, recall tells a different story. With a std of 0.071 and a 90% CI spanni
 
 ## Final Model: Random Forest
 
-The naked bootstrap established that recall is too variable without any tuning. Rather than running the full heavy pipeline, `Final_Model_RandomForest.ipynb` uses a deliberately **light and conservative** tuning approach: 8 Optuna trials (vs 30+ elsewhere), a stronger gap penalty (λ=0.5 vs 0.3), tighter regularization bounds, SHAP-based genre consolidation, top 12 features by importance, centrality ablation, and a precision floor of 0.60 on threshold tuning.
+The naked bootstrap established that recall is too variable without any tuning. Rather than running the full heavy pipeline, `Final_Model_RandomForest.ipynb` uses a deliberately **light and conservative** tuning approach: 8 Optuna trials (vs 30+ elsewhere), a stronger gap penalty (λ=0.5 vs 0.3), tighter regularization bounds, SHAP-based genre consolidation, top 12 features by importance, centrality ablation, and maximized F1 score constrained to a precision floor of 0.60 on threshold tuning.
 
 **Best parameters found:** `n_estimators=181`, `max_depth=2`, `min_samples_leaf=14`, `max_features=log2` — shallow trees, strongly regularized.
 
