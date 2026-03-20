@@ -45,8 +45,7 @@ Artists break onto the Billboard Hot 100 every year, but only a fraction sustain
 | `billboard_hot100_1958_2026.csv` | Week-by-week Billboard Hot 100 entries (1958–2026), ~350 K rows |
 | `billboard_hot100_songs_final.csv` | Deduplicated Hot 100 songs (one row per unique song, ~30 K rows, derived from weekly data) |
 | `billboard_200_albums_final.csv` | Deduplicated Billboard 200 albums (~19 K rows, derived from weekly data) |
-| `kang_data_w_spotify.csv` | Kang/Kwon academic dataset with verified Spotify IDs ([GitHub](https://github.com/inwonakng/predicting-musician-success.git))|
-| `gabminamedez_spotify_data.csv` | Spotify audio features ([GitHub](https://github.com/gabminamedez/spotify-data)) |
+| `kang_data_w_spotify.csv` | Kang academic dataset with verified Spotify IDs ([GitHub](https://github.com/inwonakng/predicting-musician-success.git))|
 | `google_trends_top3000.csv` | Monthly Google Trends interest for top artists (via `pytrends`) |
 | MusicBrainz PostgreSQL DB (Docker) | Artist IDs, genre tags, collaboration edges |
 
@@ -69,7 +68,7 @@ External Sources → Stage 1–8 → df_artists.csv (13,655 artists × 44 cols)
 | Stage | Name | Key Transformations |
 |:-----:|------|---------------------|
 | 1 | **Billboard Cleaning & Artist Verification** | Split collaborations ("Drake Feat. Rihanna" → separate rows); MusicBrainz fuzzy matching; name normalization |
-| 2 | **Artist / Song Aggregation & Target** | Per-artist chart stats (total songs, #1 hits, top-10/20/50 counts); milestone-year columns; `top_10_hitmaker_songs` flag (intermediate flag, not the final target) |
+| 2 | **Artist / Song Aggregation & Target** | Per-artist chart stats (total songs, #1 hits, top-10/20/50 counts); milestone-year columns |
 | 3 | **Artist Name Deduplication** | Removed collab artifacts (`feat.`/`ft.`); deduplicated `the`/non-`the` variants; manual keep-lists |
 | 4 | **Label & Genre Tagging** | MusicBrainz genre queries; 546-genre → 18-major-category mapping; one-hot genre columns |
 | 5 | **MusicBrainz ID Corrections** | Fixed 564 wrong MBIDs; filled missing IDs from Kang dataset |
