@@ -1,6 +1,8 @@
 # Hitmakers vs. One-Hit Wonders
 ### Predicting Sustained Success in the Music Industry
 
+**Authors:** [Vishal Gupta](https://github.com/vishalguptaud) · [Yundi Kong](https://github.com/Ykong21) · [James McNally](https://github.com/jamesemcnally) · [Guillermo Sanmarco](https://github.com/sanmarcog)
+
 > **Can we predict whether a newly charting artist will become a hitmaker or a one-hit wonder?**
 
 This project builds a machine-learning pipeline that predicts whether an artist who scores their first Billboard Hot 100 top-20 hit will go on to chart again (`top_20_hitmaker = 1`) or remain a one-hit wonder (`top_20_hitmaker = 0`).
@@ -56,13 +58,7 @@ Artists break onto the Billboard Hot 100 every year, but only a fraction sustain
 
 The raw data goes through **8 feature-engineering stages** before reaching the model-ready dataset. Full details are in `data_preparation.ipynb` and the notebooks under `Pipeline_supplement/`.
 
-```
-External Sources → Stage 1–8 → df_artists.csv (13,655 artists × 44 cols)
-                                       │
-                               data_preparation.ipynb
-                                       │
-                               df_artists_final.csv (759 artists × 26 cols + target)
-```
+![Data Pipeline](Complementary%20Study/Data%20pipeline.png)
 
 ### Stage Summary
 
