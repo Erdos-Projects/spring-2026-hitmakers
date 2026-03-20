@@ -43,8 +43,8 @@ Artists break onto the Billboard Hot 100 every year, but only a fraction sustain
 | File / Source | Description |
 |---------------|-------------|
 | `billboard_hot100_1958_2026.csv` | Week-by-week Billboard Hot 100 entries (1958–2026), ~350 K rows |
-| `billboard_hot100_songs_final.csv` | Deduplicated Hot 100 songs (one row per unique song, ~30 K rows) |
-| `billboard_200_albums_final.csv` | Deduplicated Billboard 200 albums (~19 K rows) |
+| `billboard_hot100_songs_final.csv` | Deduplicated Hot 100 songs (one row per unique song, ~30 K rows, derived from weekly data) |
+| `billboard_200_albums_final.csv` | Deduplicated Billboard 200 albums (~19 K rows, derived from weekly data) |
 | `kang_data_w_spotify.csv` | Kang/Kwon academic dataset with verified Spotify IDs ([GitHub](https://github.com/inwonakng/predicting-musician-success.git))|
 | `gabminamedez_spotify_data.csv` | Spotify audio features ([GitHub](https://github.com/gabminamedez/spotify-data)) |
 | `google_trends_top3000.csv` | Monthly Google Trends interest for top artists (via `pytrends`) |
