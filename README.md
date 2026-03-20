@@ -144,6 +144,7 @@ The model comparison notebook (`Model_Comparison_Final.ipynb`) runs an **8-step 
 |-------|------|----------------|
 | Stratified Baseline | Baseline | Predicts class ratio (~43 % hitmaker) |
 | Logistic Regression | Linear | L2-regularised, `StandardScaler` applied — preliminary study only |
+| SVM | Kernel-based | RBF kernel, requires feature scaling, tuned C and gamma — preliminary study only |
 | Random Forest | Ensemble (bagging) | `class_weight='balanced'` for imbalance |
 | XGBoost | Gradient boosting | L1/L2 regularisation, column sampling |
 | LightGBM | Gradient boosting | Histogram-based, leaf-wise growth |
