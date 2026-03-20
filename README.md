@@ -34,7 +34,7 @@ This project builds a machine-learning pipeline that predicts whether an artist 
 
 Artists break onto the Billboard Hot 100 every year, but only a fraction sustain chart success. This project combines Billboard chart history (1958–2026), MusicBrainz metadata, collaboration-network analysis, and genre tagging to predict — at the moment of an artist's first top-20 hit — whether they will chart again.
 
-The modelling pipeline combines hyperparameter tuning (Optuna), feature selection (forward selection + SHAP), genre consolidation, centrality ablation, and leakage-safe threshold tuning. A lighter version of this pipeline is used for the final model, prioritising stability and interpretability over exhaustive search.
+<!-- The modelling pipeline combines hyperparameter tuning (Optuna), feature selection (forward selection + SHAP), genre consolidation, centrality ablation, and leakage-safe threshold tuning. A lighter version of this pipeline is used for the final model, prioritising stability and interpretability over exhaustive search. -->
 
 ---
 
