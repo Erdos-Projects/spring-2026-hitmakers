@@ -266,7 +266,7 @@ For RF, the raw probabilities are compressed (range 0.26–0.74) and deviate fro
 - Isotonic regression is known to overfit on small datasets (sklearn recommends n > 1000); our training set has 607 artists, making sigmoid the safer choice.
 - Both calibrated models improve Brier score and log loss over the uncalibrated baseline, confirming that probabilities are genuinely more trustworthy after calibration.
 
-The cost of calibration is a modest drop in F1 (0.667 → 0.653) and precision (0.627 → 0.603), shared equally by both methods. This is the honest price of making probabilities meaningful rather than just optimising for the binary decision.
+The cost of calibration is a modest drop in F1 (0.667 → 0.653) and precision (0.627 → 0.603), shared equally by both methods.
 
 ---
 
