@@ -261,7 +261,7 @@ For RF, the raw probabilities are compressed (range 0.26–0.74) and deviate fro
 
 **Why Sigmoid wins:**
 
-- Sigmoid and isotonic produce **identical classification metrics** (same Precision, Recall, F1) at their respective thresholds.
+- As expected, sigmoid and isotonic produce **identical classification metrics** (same Precision, Recall, F1) at their respective thresholds.
 - Sigmoid **preserves AUC exactly** (0.773 vs 0.768 for isotonic), meaning the ranking of artists is unaffected.
 - Isotonic regression is known to overfit on small datasets (sklearn recommends n > 1000); our training set has 607 artists, making sigmoid the safer choice.
 - Both calibrated models improve Brier score and log loss over the uncalibrated baseline, confirming that probabilities are genuinely more trustworthy after calibration.
