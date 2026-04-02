@@ -29,8 +29,9 @@ This project builds a machine-learning pipeline that predicts whether an artist 
 7. [Model Selection & Stability](#model-selection--stability)
 8. [Robustness Check: Naked Models](#robustness-check-naked-models)
 9. [Final Model: Random Forest](#final-model-random-forest)
-10. [Repository Structure](#repository-structure)
-11. [Getting Started](#getting-started)
+10. [Complement: Reporting Predicted Probabilities](#complement-reporting-predicted-probabilities)
+11. [Repository Structure](#repository-structure)
+12. [Getting Started](#getting-started)
 
 ---
 
@@ -226,6 +227,54 @@ Two things support this. First, the pipeline consistently selects 10 features ac
 
 ---
 
+## Complement: Reporting Predicted Probabilities
+
+The sections above treat the model as a binary classifier — the output is a yes/no decision at a tuned threshold. As a complement, we investigate whether the model's raw predicted probabilities are trustworthy enough to report directly (e.g. "this artist has a 72% chance of becoming a hitmaker").
+
+### Calibration across all models
+
+As a first step, we computed calibration curves for all six models in the comparison pipeline (`Model_Comparison_Final.ipynb`). A well-calibrated model has a curve that tracks the diagonal: when it predicts 70% probability, 70% of those artists should actually be hitmakers.
+
+![Calibration curves and predicted probability distributions for all 6 models](Complementary%20Study/calibration_curves_all_models.png)
+
+**Key findings:**
+
+- **Random Forest and XGBoost** are the best-calibrated models — their curves track the diagonal reasonably well in the mid-range (0.3–0.7), where most predictions fall. Crucially, neither model ever produces extreme probabilities: RF tops out at 0.74, XGBoost at 0.84. This reflects genuine uncertainty, not a limitation.
+- **LightGBM and CatBoost** are overconfident: LightGBM reaches 0.995 and assigns probabilities above 90% to 12 test artists; CatBoost reaches 0.976. On a dataset of 759 artists, this level of certainty is not credible.
+- **AdaBoost Linear** is essentially broken as a probability estimator — it collapses nearly all predictions to a single value (~0.47), making its probabilities meaningless.
+- **AdaBoost Tree** produces probabilities in a very narrow range (0.31–0.74), reflecting a model that is never confident in either direction.
+
+This analysis further supports the selection of Random Forest as the final model — it is the only model that is both well-discriminating (AUC 0.767) and produces probabilities that are plausibly meaningful.
+
+---
+
+### Calibrating the Final Random Forest
+
+Even for RF, the raw probabilities are compressed (range 0.26–0.74) and deviate from the diagonal at the extremes. To make the probabilities genuinely reportable, we applied post-hoc calibration using two standard methods on top of the final tuned RF.
+
+Both calibrators are trained on the out-of-fold (OOF) predictions from Step 7 of the pipeline — the same unbiased predictions already used for threshold tuning — so no new cross-validation is needed and there is no data leakage.
+
+![Calibration comparison for the final RF: uncalibrated vs sigmoid vs isotonic](Complementary%20Study/calibration_rf_sigmoid_isotonic.png)
+
+| Method | Threshold | AUC | Brier Score | Log Loss | Precision | Recall | F1 |
+|--------|:---------:|:---:|:-----------:|:--------:|:---------:|:------:|:--:|
+| Uncalibrated | 0.50 | 0.773 | 0.205 | 0.597 | 0.627 | 0.712 | 0.667 |
+| Sigmoid | 0.43 | **0.773** | 0.198 | 0.581 | 0.603 | 0.712 | 0.653 |
+| Isotonic | 0.42 | 0.768 | **0.191** | **0.559** | 0.603 | 0.712 | 0.653 |
+
+**Why Sigmoid wins:**
+
+- Sigmoid and isotonic produce **identical classification metrics** (same Precision, Recall, F1) at their respective thresholds — the probability rescaling is similar enough that no classification decision changes.
+- Sigmoid **preserves AUC exactly** (0.773 vs 0.768 for isotonic), meaning the ranking of artists is unaffected.
+- Isotonic regression is known to overfit on small datasets (sklearn recommends n > 1000); our training set has 607 artists, making sigmoid the safer choice.
+- Both calibrated models improve Brier score and log loss over the uncalibrated baseline, confirming that probabilities are genuinely more trustworthy after calibration.
+
+The cost of calibration is a modest drop in F1 (0.667 → 0.653) and precision (0.627 → 0.603), shared equally by both methods. This is the honest price of making probabilities meaningful rather than just optimising for the binary decision.
+
+The final saved model (`final_rf_model_simplified.pkl`) includes the sigmoid calibrator and re-tuned threshold (0.43). To generate a calibrated probability for a new artist, apply `model_final` followed by `calibrator` rather than using `predict_proba` on the base model directly.
+
+---
+
 ## Repository Structure
 
 ```
@@ -258,21 +307,10 @@ Two things support this. First, the pipeline consistently selects 10 features ac
 
 ## Getting Started
 
+
 ### Requirements
 
-```
-python >= 3.9
-pandas
-numpy
-scikit-learn
-xgboost
-lightgbm
-catboost
-optuna
-shap
-matplotlib
-seaborn
-```
+Python >= 3.9. All dependencies are listed in [`requirements.txt`](requirements.txt).
 
 ### Quick Start
 
@@ -284,7 +322,7 @@ seaborn
 
 2. **Install dependencies**
    ```bash
-   pip install pandas numpy scikit-learn xgboost lightgbm catboost optuna shap matplotlib seaborn
+   pip install -r requirements.txt
    ```
 
 3. **Run data preparation** (optional — `df_artists_final.csv` is already provided)
