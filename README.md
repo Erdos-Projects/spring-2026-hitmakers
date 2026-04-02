@@ -247,7 +247,7 @@ This analysis further supports the selection of Random Forest as the final model
 
 ---
 
-### Calibrating the Final Random Forest
+### Calibrating the Final Random Forest for Reporting Probabilities
 
 For RF, the raw probabilities are compressed (range 0.26–0.74) and deviate from the diagonal at the extremes. To make the probabilities genuinely reportable, we applied post-hoc calibration using two standard methods on top of the final tuned RF. Both calibrators are trained on the OOF predictions.
 
