@@ -263,11 +263,11 @@ ECE = Expected Calibration Error (adaptive quantile binning, 8 bins); lower is b
 
 **Why Isotonic wins:**
 
-- As expected for any monotone calibration, sigmoid and isotonic produce **identical classification metrics** (same Precision, Recall, F1) — the ranking of artists is preserved, so the optimal classification boundary is the same regardless of which method is applied.
+- As expected, sigmoid and isotonic produce identical classification metrics (Precision, Recall, F1).
 - Both calibrated models improve over the uncalibrated baseline on all probability metrics (ECE, Brier, log loss).
 - Isotonic has notably lower ECE (0.046 vs 0.085) and better Brier and log loss. While the small test set (n=152) makes these point estimates noisy, a **permutation test** (N=10,000) confirms the ECE advantage is statistically significant (p=0.022, one-sided).
 
-**Permutation test:** under the null hypothesis that both calibrators are equivalent, we randomly swapped sigmoid and isotonic probabilities across artists and recomputed the ECE difference 10,000 times. The observed difference (−0.039) fell in the bottom 2.2% of the null distribution — unlikely to be chance. Unlike bootstrap resampling, this test keeps the 152 test artists fixed and avoids the Jensen's inequality inflation that inflates bootstrap ECE estimates on small samples.
+**Permutation test:** under the null hypothesis that both calibrators are equivalent, we randomly swapped sigmoid and isotonic probabilities across artists and recomputed the ECE difference 10,000 times. The observed difference (−0.039) fell in the bottom 2.2% of the null distribution — unlikely to be chance. 
 
 The cost of calibration is a modest drop in F1 (0.667 → 0.653) and precision (0.627 → 0.603), shared equally by both methods. AUC drops marginally for isotonic (0.773 → 0.768) — a negligible tradeoff given the probability quality gains.
 
