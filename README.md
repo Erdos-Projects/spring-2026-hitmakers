@@ -14,7 +14,7 @@ This project builds a machine-learning pipeline that predicts whether an artist 
 | **Dataset** | 759 artists × 26 features (2000–2019 debut window) |
 | **Target** | `top_20_hitmaker` — binary (1 = multiple top-20 hits, 0 = exactly one) |
 | **Class balance** | ~57 % one-hit wonders · ~43 % hitmakers |
-| **Final model** | Random Forest (Test AUC = 0.773, Recall = 0.712, light Optuna tuning) |
+| **Final model** | Random Forest + isotonic calibration (Test AUC = 0.768, Recall = 0.712, ECE = 0.046) |
 
 ---
 
@@ -253,20 +253,23 @@ For RF, the raw probabilities are compressed (range 0.26–0.74) and deviate fro
 
 ![Calibration comparison for the final RF: uncalibrated vs sigmoid vs isotonic](Complementary%20Study/calibration_rf_sigmoid_isotonic.png)
 
-| Method | Threshold | AUC | Brier Score | Log Loss | Precision | Recall | F1 |
-|--------|:---------:|:---:|:-----------:|:--------:|:---------:|:------:|:--:|
-| Uncalibrated | 0.50 | 0.773 | 0.205 | 0.597 | 0.627 | 0.712 | 0.667 |
-| Sigmoid | 0.43 | **0.773** | 0.198 | 0.581 | 0.603 | 0.712 | 0.653 |
-| Isotonic | 0.42 | 0.768 | **0.191** | **0.559** | 0.603 | 0.712 | 0.653 |
+| Method | Threshold | AUC | ECE | Brier Score | Log Loss | Precision | Recall | F1 |
+|--------|:---------:|:---:|:---:|:-----------:|:--------:|:---------:|:------:|:--:|
+| Uncalibrated | 0.50 | 0.773 | 0.123 | 0.205 | 0.597 | 0.627 | 0.712 | 0.667 |
+| Sigmoid | 0.43 | **0.773** | 0.085 | 0.198 | 0.581 | 0.603 | 0.712 | 0.653 |
+| Isotonic | 0.42 | 0.768 | **0.046** | **0.191** | **0.559** | 0.603 | 0.712 | 0.653 |
 
-**Why Sigmoid wins:**
+ECE = Expected Calibration Error (adaptive quantile binning, 8 bins); lower is better.
 
-- As expected, sigmoid and isotonic produce **identical Precision, Recall, F1** at their respective thresholds.
-- Sigmoid **preserves AUC exactly** (0.773 vs 0.768 for isotonic), meaning the ranking of artists is unaffected.
-- Isotonic regression is known to overfit on small datasets (sklearn recommends n > 1000); our training set has 607 artists, making sigmoid the safer choice.
-- Both calibrated models improve Brier score and log loss over the uncalibrated baseline, confirming that probabilities are genuinely more trustworthy after calibration.
+**Why Isotonic wins:**
 
-The cost of calibration is a modest drop in F1 (0.667 → 0.653) and precision (0.627 → 0.603), shared equally by both methods.
+- As expected for any monotone calibration, sigmoid and isotonic produce **identical classification metrics** (same Precision, Recall, F1) — the ranking of artists is preserved, so the optimal classification boundary is the same regardless of which method is applied.
+- Both calibrated models improve over the uncalibrated baseline on all probability metrics (ECE, Brier, log loss).
+- Isotonic has notably lower ECE (0.046 vs 0.085) and better Brier and log loss. While the small test set (n=152) makes these point estimates noisy, a **permutation test** (N=10,000) confirms the ECE advantage is statistically significant (p=0.022, one-sided).
+
+**Permutation test:** under the null hypothesis that both calibrators are equivalent, we randomly swapped sigmoid and isotonic probabilities across artists and recomputed the ECE difference 10,000 times. The observed difference (−0.039) fell in the bottom 2.2% of the null distribution — unlikely to be chance. Unlike bootstrap resampling, this test keeps the 152 test artists fixed and avoids the Jensen's inequality inflation that inflates bootstrap ECE estimates on small samples.
+
+The cost of calibration is a modest drop in F1 (0.667 → 0.653) and precision (0.627 → 0.603), shared equally by both methods. AUC drops marginally for isotonic (0.773 → 0.768) — a negligible tradeoff given the probability quality gains.
 
 ---
 
