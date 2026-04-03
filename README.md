@@ -259,7 +259,7 @@ For RF, the raw probabilities are compressed (range 0.26–0.74) and deviate fro
 | Sigmoid | 0.43 | **0.773** | 0.085 | 0.198 | 0.581 | 0.603 | 0.712 | 0.653 |
 | Isotonic | 0.42 | 0.768 | **0.046** | **0.191** | **0.559** | 0.603 | 0.712 | 0.653 |
 
-ECE = Expected Calibration Error (adaptive quantile binning, 8 bins); lower is better.
+ECE = Expected Calibration Error (adaptive quantile binning, 8 bins).
 
 **Why Isotonic wins:**
 
